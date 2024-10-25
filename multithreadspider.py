@@ -31,7 +31,6 @@ def fetch_news_page(news_url):
         response.encoding = response.apparent_encoding  # 设置编码
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
-            #text_content = soup.get_text(separator="\n", strip=True)
             article_title = soup.find('span', class_='Article_Title')
             text_title = article_title.get_text().strip() if article_title else ''
             article_content = soup.find('div', class_='Article_Content')
@@ -63,7 +62,6 @@ def main():
     response = requests.get(base_url + "/2202/list.htm")
     soup = BeautifulSoup(response.text, 'html.parser')
     total_pages = int(soup.find('em', class_='all_pages').text)
-    total_pages = 10
     print(f"Total pages: {total_pages}")
     all_texts = []
     

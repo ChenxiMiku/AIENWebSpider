@@ -16,6 +16,12 @@
 2. **运行主程序**
    ```bash
    python asyncspider.py
+## 常见问题
+
+1.  **Error downloading https://wzgl.shou.edu.cn/_upload/article/images/xx/xx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx.png: Cannot connect to host wzgl.shou.edu.cn:443 ssl:default [信号灯超时时间已到]**
+   
+   - 该网址需要上海海洋大学内网访问，请在校园网环境或连接学校VPN使用本程序。
+
 ## 合规性和法律要求
 
 ### 遵守网站 `robots.txt`
@@ -30,8 +36,8 @@
 
 在数据抓取和使用过程中，请遵循以下法律法规：
 
-- **《数据安全法》**：确保您对数据的处理、存储和使用是合法合规的，保护用户隐私。
-- **《个人信息保护法》**：在抓取涉及个人信息的数据时，请确保遵循相关法律，避免侵害个人隐私。
+- **《中华人民共和国数据安全法》**：确保您对数据的处理、存储和使用是合法合规的，保护用户隐私。
+- **《中华人民共和国个人信息保护法》**：在抓取涉及个人信息的数据时，请确保遵循相关法律，避免侵害个人隐私。
 
 ### 遵守 GPL-3.0 开源协议
 

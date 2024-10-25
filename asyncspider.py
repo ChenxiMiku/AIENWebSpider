@@ -35,7 +35,6 @@ async def fetch_news_page(session, news_url):
                 text_title = article_title.get_text().strip() if article_title else ''
                 article_content = soup.find('div', class_='Article_Content')
                 text_content = text_title + '\n' + article_content.get_text().strip() if article_content else ''
-                
                 img_urls = []
                 if article_content.find_all('img', attrs={'data-layer': 'photo'}):
                     img_tags = article_content.find_all('img', attrs={'data-layer': 'photo'}) if article_content else []
@@ -43,7 +42,7 @@ async def fetch_news_page(session, news_url):
                     for src in img_srcs:
                         if re.search(r'(/_upload/[^"]+)', src):
                             img_urls.append(f'https://ien.shou.edu.cn{src}' if not src.startswith('http') else src)
-                else:
+                else: # Fallback to regex if no data-layer attribute
                     img_urls = re.findall(r'(/_upload/article/images/[^\s"\'<>]+)', html)
                     img_urls = [f'https://ien.shou.edu.cn{img_url}' for img_url in img_urls]
                 
