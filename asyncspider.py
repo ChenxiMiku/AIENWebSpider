@@ -3,7 +3,11 @@ import re
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
-import time
+from tqdm.asyncio import tqdm
+
+# Initialize a counter for downloaded images
+downloaded_image_count = 0
+image_count_lock = asyncio.Lock()  # Lock to ensure thread-safe updates to the counter
 
 async def create_img_folder(folder_name):
     """Create a folder to save images."""
@@ -11,14 +15,19 @@ async def create_img_folder(folder_name):
         os.makedirs(folder_name)
 
 async def download_image(session, img_url, folder_name):
-    """Download an image and save it to the specified folder."""
+    """Download an image and save it to the specified folder, with thread-safe counting."""
+    global downloaded_image_count
     try:
         async with session.get(img_url) as response:
             if response.status == 200:
                 file_name = os.path.join(folder_name, img_url.split('/')[-1])
                 with open(file_name, 'wb') as file:
                     file.write(await response.read())
-                print(f"Downloaded {file_name}")
+                
+                # Update the counter in a thread-safe way
+                async with image_count_lock:
+                    downloaded_image_count += 1
+
             else:
                 print(f"Failed to retrieve image from {img_url}")
     except Exception as e:
@@ -35,14 +44,14 @@ async def fetch_news_page(session, news_url):
                 text_title = article_title.get_text().strip() if article_title else ''
                 article_content = soup.find('div', class_='Article_Content')
                 text_content = text_title + '\n' + article_content.get_text().strip() if article_content else ''
+                
                 img_urls = []
                 if article_content.find_all('img', attrs={'data-layer': 'photo'}):
                     img_tags = article_content.find_all('img', attrs={'data-layer': 'photo'}) if article_content else []
                     img_srcs = [img['src'] for img in img_tags if 'src' in img.attrs]
                     for src in img_srcs:
-                        if re.search(r'(/_upload/[^"]+)', src):
-                            img_urls.append(f'https://ien.shou.edu.cn{src}' if not src.startswith('http') else src)
-                else: # Fallback to regex if no data-layer attribute
+                        img_urls.append(f'https://ien.shou.edu.cn{src}' if not src.startswith('http') else src)
+                else:
                     img_urls = re.findall(r'(/_upload/article/images/[^\s"\'<>]+)', html)
                     img_urls = [f'https://ien.shou.edu.cn{img_url}' for img_url in img_urls]
                 
@@ -55,7 +64,7 @@ async def fetch_news_page(session, news_url):
         return "", []
 
 async def main():
-    start_time = time.time()  # Start timing
+    global downloaded_image_count
     base_url = "https://ien.shou.edu.cn"
     
     async with aiohttp.ClientSession() as session:
@@ -70,9 +79,8 @@ async def main():
         print(f"Total pages: {total_pages}")
         
         all_texts = []
-
-        # Collect futures for news pages
         news_futures = []
+        
         for i in range(1, total_pages + 1):
             try:
                 response = await session.get(base_url + f"/2202/list{i}.htm")
@@ -89,28 +97,26 @@ async def main():
             except Exception as e:
                 print(f"Error fetching news list: {e}")
 
-        # Fetch news pages concurrently
-        news_results = await asyncio.gather(*news_futures)
+        # Fetch news pages concurrently with progress bar
+        print("Fetching news pages...")
+        news_results = await tqdm.gather(*news_futures, desc="News Pages", total=len(news_futures))
 
-        # Download images concurrently
+        # Download images concurrently with progress bar
         img_futures = []
         for text, img_urls in news_results:
             all_texts.append(text)
             img_futures.extend([download_image(session, img_url, 'img') for img_url in img_urls])
 
-        # Wait for all image downloads to complete
-        await asyncio.gather(*img_futures)
+        # Display image download progress
+        print("Downloading images...")
+        await tqdm.gather(*img_futures, desc="Images", total=len(img_futures))
 
     # Write all text to file
     with open('ien.txt', 'w', encoding='utf-8') as text_file:
         text_file.write("\n\n".join(all_texts))
     
-    # Count images downloaded
-    img_count = len(os.listdir('img'))
-    print(f"Downloaded {img_count} images to the 'img' folder.")
-    
-    end_time = time.time()  # End timing
-    print(f"Total time taken: {end_time - start_time:.2f} seconds")
+    # Print total downloaded images
+    print(f"Downloaded {downloaded_image_count} images to the 'img' folder.")
 
 if __name__ == "__main__":
     asyncio.run(main())
