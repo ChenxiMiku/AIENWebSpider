@@ -7,23 +7,50 @@
 使用tqdm库实现进度条。
 
 ## 使用说明
+请按照以下步骤配置和运行该程序：
 
-1. **安装依赖**：
+1. 克隆项目到本地：
+    ```bash
+    git clone https://github.com/ChenxiMiku/AIENWebSpider
+    cd AIENWebSpider
+    ```
+
+2. **安装依赖**：
    - `aiohttp`
    - `beautifulsoup4`
    - `tqdm`
    
-   您可以使用以下命令安装依赖：
+   您可以用以下命令安装依赖：
+   ```bash
+   pip install -r requirements.txt
+   pip install aiohttp beautifulsoup4 tqdm
+   ```
+
+   或手动安装这些依赖：
    ```bash
    pip install aiohttp beautifulsoup4 tqdm
-2. **运行主程序**
+   ```
+
+3. **运行主程序**
    ```bash
    python asyncspider.py
+   ```
+
 ## 常见问题
 
-1.  **Error downloading https://wzgl.shou.edu.cn/_upload/article/images/xx/xx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx.png: Cannot connect to host wzgl.shou.edu.cn:443 ssl:default [信号灯超时时间已到]**
-   
-   - 该网址需要上海海洋大学内网访问，请在校园网环境或连接学校VPN使用本程序。
+### Error downloading https://wzgl.shou.edu.cn/_upload/article/images/xx/xx/xxxxxxxxxxxxxxxxxxxxxxxxxx/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx.png: Cannot connect to host wzgl.shou.edu.cn:443 ssl:default [信号灯超时时间已到]
+**问题描述**  
+此错误表明程序无法连接到 `wzgl.shou.edu.cn`，原因是该网站需要通过上海海洋大学的校园网或 VPN 才能访问。
+
+**解决方法**  
+请确保在以下环境下使用本程序：
+1. 在上海海洋大学校园网内使用本程序。
+2. 或通过 VPN 连接至上海海洋大学内网后使用本程序。
+
+在此环境下重新运行程序即可正常访问该网址。
+
+### 其他常见问题
+如果遇到其他错误或问题，请提交 issue 或联系开发者。
 
 ## 合规性和法律要求
 
