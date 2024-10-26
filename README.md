@@ -23,7 +23,6 @@
    您可以用以下命令安装依赖：
    ```bash
    pip install -r requirements.txt
-   pip install aiohttp beautifulsoup4 tqdm
    ```
 
    或手动安装这些依赖：
