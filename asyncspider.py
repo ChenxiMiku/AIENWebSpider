@@ -118,7 +118,11 @@ async def main():
         text_file.write("\n\n".join(all_texts))
     
     # Print total downloaded images
-    print(f"Downloaded {downloaded_image_count} images to the 'img' folder.")
+    print(f"Downloaded {downloaded_image_count} images this time.")
+    # Print total images in the folder
+    img_count = len(os.listdir('img'))
+    print(f"Downloaded {img_count} images to the 'img' folder.")
+    
     end_time = time.time()  # End timing
     print(f"Time taken: {end_time - start_time:.2f} seconds")
 
