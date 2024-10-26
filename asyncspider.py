@@ -2,6 +2,7 @@ import os
 import re
 import asyncio
 import aiohttp
+import time
 from bs4 import BeautifulSoup
 from tqdm.asyncio import tqdm
 
@@ -64,6 +65,7 @@ async def fetch_news_page(session, news_url):
         return "", []
 
 async def main():
+    start_time = time.time()  # Start timing
     global downloaded_image_count
     base_url = "https://ien.shou.edu.cn"
     
@@ -117,6 +119,8 @@ async def main():
     
     # Print total downloaded images
     print(f"Downloaded {downloaded_image_count} images to the 'img' folder.")
+    end_time = time.time()  # End timing
+    print(f"Time taken: {end_time - start_time:.2f} seconds")
 
 if __name__ == "__main__":
     asyncio.run(main())

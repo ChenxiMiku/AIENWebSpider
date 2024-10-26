@@ -4,15 +4,18 @@
 
 此项目是一个简单的爬虫，用于抓取上海海洋大学爱恩学院的新闻动态，包括该网站的新闻内容和相关图片。该爬虫使用了 aiohttp 网络请求库，结合异步请求和多线程技术，以提高数据抓取的效率。经过初步测试，相较于使用 requests 请求库单线程实现，该爬虫的速度快了约 8 倍；而与使用 requests 请求库多线程（max_workers=32）相比，其速度快了约 3 倍。本项目还提供了该爬虫的requests多线程实现。
 
+使用tqdm库实现进度条。
+
 ## 使用说明
 
 1. **安装依赖**：
    - `aiohttp`
    - `beautifulsoup4`
+   - `tqdm`
    
    您可以使用以下命令安装依赖：
    ```bash
-   pip install aiohttp beautifulsoup4 
+   pip install aiohttp beautifulsoup4 tqdm
 2. **运行主程序**
    ```bash
    python asyncspider.py
